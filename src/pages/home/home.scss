@@ -1,3 +1,35 @@
 page-home {
+  $grid-padding-width:         5px !important;
+  table {
+    width: 100%;
+    border: 1px solid #8F8F8F;
+  }
+  th {
+    width: 17%;
+    text-align: center;
+    vertical-align: top;
+    border: 1px solid #8F8F8F;
+  }
+  td {
+    width: 17%;
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid #8F8F8F;
+  }
+  .cabecera-tabla {
+    font-weight: bold !important;
+    font-size: 13px !important;
+  }
+  .cuerpo-tabla {
+    font-size: 10px !important;
+    text-align: left !important;
+  }
+  .cuerpo-tabla-footer {
+    font-weight: bold !important;
+    font-size: 10px !important;
+  }
+  ion-row {
+    border: 1px ridge #8F8F8F;
+  }
 
 }

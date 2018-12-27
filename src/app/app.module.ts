@@ -13,21 +13,23 @@ import { FirebaseProvider } from '../providers/firebase/firebase';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import {PedidoPage} from "../pages/pedido/pedido";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyBIroU4gktZmynHfQxSADm2cdROeb3bY_A",
-  authDomain: "orders-99d98.firebaseapp.com",
-  databaseURL: "https://orders-99d98.firebaseio.com",
-  projectId: "orders-99d98",
-  storageBucket: "orders-99d98.appspot.com",
-  messagingSenderId: "503041768704"
+  apiKey: "AIzaSyC1WMsEDhh1UFjxRHDUiOMN8NW7FbfViks",
+  authDomain: "ordenes-8aad1.firebaseapp.com",
+  databaseURL: "https://ordenes-8aad1.firebaseio.com",
+  projectId: "ordenes-8aad1",
+  storageBucket: "ordenes-8aad1.appspot.com",
+  messagingSenderId: "55102761735"
 };
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    ListPage
+    ListPage,
+    PedidoPage
   ],
   imports: [
     BrowserModule,
@@ -40,7 +42,8 @@ export const firebaseConfig = {
   entryComponents: [
     MyApp,
     HomePage,
-    ListPage
+    ListPage,
+    PedidoPage
   ],
   providers: [
     StatusBar,

@@ -1,18 +1,58 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="morado">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
+    <ion-title>Lista de Pedidos</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="actualizarPedidos()">
+        <ion-icon name="options"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>Ionic Menu Starter</h3>
+<ion-content>
 
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
+  <ion-grid>
+    <ion-row align-items-center class="cabecera-tabla">
+      <ion-col >Marca</ion-col>
+      <ion-col col-2 col-sm>Item</ion-col>
+      <ion-col >Cantidad</ion-col>
+      <ion-col >Precio</ion-col>
+      <ion-col >Desc BS</ion-col>
+      <ion-col col-2 col-sm>Nombre</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let pedido of lstPedidos" align-items-start class="cuerpo-tabla" >
+      <ion-col (click)="filterByCampania(pedido)" >{{pedido.marca}}</ion-col>
+      <ion-col col-2 col-sm>{{pedido.item}}</ion-col>
+      <ion-col >{{pedido.cantidad}}</ion-col>
+      <ion-col >{{pedido.precio}}</ion-col>
+      <ion-col >{{pedido.totalDescuentoBs}}</ion-col>
+      <ion-col col-2 col-sm (click)="irModificarPedido(pedido)">{{pedido.nombre}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="cuerpo-tabla-footer">
+        Total $us.
+      </ion-col>
+      <ion-col class="cuerpo-tabla" col-9>{{txtTotalPedido}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="cuerpo-tabla-footer">
+        Total Desc $.
+      </ion-col>
+      <ion-col class="cuerpo-tabla" col-9>{{txtTotalCDesc}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="cuerpo-tabla-footer">
+        Total Desc Bs.
+      </ion-col>
+      <ion-col class="cuerpo-tabla" col-9>{{txtTotalCdescBs}}</ion-col>
+    </ion-row>
 
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+  </ion-grid>
+
+  <ion-fab right bottom>
+    <button ion-fab color="moradoClaro" (click)="irNuevoPedido()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
 </ion-content>
