@@ -6,7 +6,7 @@
     <ion-title>Lista de Pedidos</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="actualizarPedidos()">
-        <ion-icon name="options"></ion-icon>
+        <ion-icon name="refresh"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -16,6 +16,7 @@
 
   <ion-grid>
     <ion-row align-items-center class="cabecera-tabla">
+      <ion-col >N°</ion-col>
       <ion-col >Marca</ion-col>
       <ion-col col-2 col-sm>Item</ion-col>
       <ion-col >Cantidad</ion-col>
@@ -24,11 +25,12 @@
       <ion-col col-2 col-sm>Nombre</ion-col>
     </ion-row>
     <ion-row *ngFor="let pedido of lstPedidos" align-items-start class="cuerpo-tabla" >
+      <ion-col (click)="filterByCampania(pedido)" >{{pedido.campania}}</ion-col>
       <ion-col (click)="filterByCampania(pedido)" >{{pedido.marca}}</ion-col>
       <ion-col col-2 col-sm>{{pedido.item}}</ion-col>
-      <ion-col >{{pedido.cantidad}}</ion-col>
-      <ion-col >{{pedido.precio}}</ion-col>
-      <ion-col >{{pedido.totalDescuentoBs}}</ion-col>
+      <ion-col (click)="irModificarPedido(pedido)">{{pedido.cantidad}}</ion-col>
+      <ion-col (click)="irModificarPedido(pedido)">{{pedido.precio}}</ion-col>
+      <ion-col (click)="irModificarPedido(pedido)">{{pedido.totalDescuentoBs}}</ion-col>
       <ion-col col-2 col-sm (click)="irModificarPedido(pedido)">{{pedido.nombre}}</ion-col>
     </ion-row>
     <ion-row>

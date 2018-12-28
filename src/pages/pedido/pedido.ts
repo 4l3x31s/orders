@@ -96,6 +96,17 @@ export class PedidoPage {
 
     this.obtenerMarcas();
   }
+  public eliminarPedido(){
+    if(this.id != 0){
+      this.fbService.deleteNote(this.pedidos);
+      this.mostrarAlert('Info', 'La orden se ha eliminado correctamente.')
+      this.navCtrl.pop();
+
+    }else{
+      alert('No se puede eliminar la nota');
+    }
+
+  }
   registrarPedidos(){
     this.txtPrecioDescuento = this.redondear((this.myForm.value.vprecio - ((this.myForm.value.vprecio * this.descuento)/100)),2);
     this.txtPrecioTotalBs =  this.redondear((this.txtPrecioDescuento * this.myForm.value.vcantidad) * this.tc, 2);
@@ -125,8 +136,9 @@ export class PedidoPage {
           this.navCtrl.pop();
         })
         .catch(error => {
-          this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error))
-        });;
+          this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
+          this.navCtrl.pop();
+        });
     }else {
       this.pedidos = new Pedidos(
         Date.now(),
@@ -149,7 +161,8 @@ export class PedidoPage {
           this.navCtrl.pop();
         })
         .catch(error => {
-          this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error))
+          this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
+          this.navCtrl.pop();
         });
     }
   }
@@ -183,5 +196,6 @@ export class PedidoPage {
     });
     alert.present();
   }
+
 
 }

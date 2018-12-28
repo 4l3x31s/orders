@@ -24,7 +24,6 @@ export class HomePage {
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public fbService: FirebaseProvider) {
-    this.listarProductos();
   }
   ionViewDidLoad(){
 
@@ -35,24 +34,13 @@ export class HomePage {
     this.obtenerListaPedidos();
   }
   obtenerListaPedidos(){
+    this.txtTotalPedido = 0;
+    this.txtTotalCDesc = 0;
+    this.txtTotalCdescBs = 0;
     this.fbService.getOrdenes()
       .subscribe(data =>{
 
         this.lstPedidos = Object.assign(data);
-        var groupBy = function (miarray, prop) {
-          var miArray = [];
-          return miarray.reduce((groups, item) => {
-            console.log("*********************")
-            console.log(groups)
-            var val = item[prop];
-            groups[val] = item;
-            miArray.push(groups[val]);
-            return groups;
-          }, {});
-
-        }
-        console.log("-----------------------------------")
-        console.log(groupBy(this.lstPedidos,'campania'));
 
         for(let i = 0; i< this.lstPedidos.length; i++) {
 
@@ -65,25 +53,26 @@ export class HomePage {
       })
   }
   ionViewWillEnter(){
-    this.listarProductos();
-  }
-  listarProductos(){
 
   }
+
   obtenerParametros(){
 
 
   }
   filterByCampania(item: any){
     this.lstPedidos = this.lstPedidos.filter(pedidos => {
-      console.log("pedidos")
-      console.log(pedidos)
-      console.log("item")
-      console.log(item)
-      console.log(pedidos.campania === item.campania)
-      pedidos.campania === item.campania
-    })
+      return pedidos.campania === item.campania
+    });
+    this.txtTotalPedido = 0;
+    this.txtTotalCDesc = 0;
+    this.txtTotalCdescBs = 0;
+    for(let i = 0; i< this.lstPedidos.length; i++) {
 
+      this.txtTotalPedido = parseFloat(this.txtTotalPedido + '') + parseFloat(this.lstPedidos[i].precioTotSinDesc+ '');
+      this.txtTotalCDesc = parseFloat(this.txtTotalCDesc + '') + parseFloat(this.lstPedidos[i].totalDescuento+ '');
+      this.txtTotalCdescBs = parseFloat(this.txtTotalCdescBs + '') + parseFloat(this.lstPedidos[i].totalDescuentoBs+ '');
+    }
   }
   irModificarPedido(item: Pedidos) {
     this.navCtrl.push(PedidoPage, {id:item.id, campania: item.campania});

@@ -112,6 +112,9 @@
         <p color="danger" ion-text *ngIf="myForm.get('vcampania').hasError('required')">El campo es requerido</p>
       </ion-item>
     </ion-list>
-    <button ion-button block color="moradoClaro" type="submit" [disabled]="myForm.invalid">Registar Pedido</button>
+    <div>
+      <button ion-button block color="moradoClaro" type="submit" [disabled]="myForm.invalid">Registar Pedido</button>
+      <button *ngIf="id != 0" ion-button block color="danger" (click)="eliminarPedido()">Eliminar Nota</button>
+    </div>
   </form>
 </ion-content>
