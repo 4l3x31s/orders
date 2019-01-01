@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Pedidos} from "../class/pedidos";
 import {Marcas} from "../class/marcas";
 import {FirebaseProvider} from "../../providers/firebase/firebase";
+import * as moment from 'moment';
 /**
  * Generated class for the PedidoPage page.
  *
@@ -15,10 +16,14 @@ import {FirebaseProvider} from "../../providers/firebase/firebase";
   selector: 'page-pedido',
   templateUrl: 'pedido.html',
 })
-export class PedidoPage {
+export class PedidoPage implements OnInit {
+  ngOnInit(): void {
+    this.iniciar();
+  }
 
 
   myForm: FormGroup;
+  eliminar:boolean = false;
   tc: number = 6.96;
   descuento: number = 12;
   id:any = null;
@@ -42,7 +47,7 @@ export class PedidoPage {
   public txtCampania: number = 0;
 
   public txtPrecioTotalSinDesc: number = 0;
-
+  public myDate;
 
 
   public loader: any;
@@ -54,8 +59,9 @@ export class PedidoPage {
     public fb: FormBuilder,
     public fbService: FirebaseProvider) {
 
-    this.iniciar();
+    //this.iniciar();
   }
+
 
   iniciar(){
     this.id = this.navParams.get('id');
@@ -74,17 +80,19 @@ export class PedidoPage {
       //TODO:EDITAR
       this.fbService.getOrden(this.id, this.campania)
         .subscribe(data => {
-          this.pedidos = Object.assign(data);
-          console.log(this.pedidos)
-          this.txtPagina  = this.pedidos.pagina;
-          this.txtMarca = this.pedidos.marca;
-          this.txtCodigo = this.pedidos.codigo;
-          this.txtItem = this.pedidos.item;
-          this.txtCantidad = this.pedidos.cantidad;
-          this.txtPrecio = this.pedidos.precio;
-          this.txtNombre = this.pedidos.nombre;
-          this.txtObservacion = this.pedidos.observacion;
-          this.txtCampania = this.pedidos.campania;
+          if(data!=null) {
+            this.pedidos = Object.assign(data);
+            console.log(this.pedidos)
+            this.txtPagina = this.pedidos.pagina;
+            this.txtMarca = this.pedidos.marca;
+            this.txtCodigo = this.pedidos.codigo;
+            this.txtItem = this.pedidos.item;
+            this.txtCantidad = this.pedidos.cantidad;
+            this.txtPrecio = this.pedidos.precio;
+            this.txtNombre = this.pedidos.nombre;
+            this.txtObservacion = this.pedidos.observacion;
+            this.txtCampania = this.pedidos.campania;
+          }
         }, error => {
           this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error))
         })
@@ -97,6 +105,7 @@ export class PedidoPage {
     this.obtenerMarcas();
   }
   public eliminarPedido(){
+    this.eliminar = true;
     if(this.id != 0){
       this.fbService.deleteNote(this.pedidos);
       this.mostrarAlert('Info', 'La orden se ha eliminado correctamente.')
@@ -108,62 +117,64 @@ export class PedidoPage {
 
   }
   registrarPedidos(){
-    this.txtPrecioDescuento = this.redondear((this.myForm.value.vprecio - ((this.myForm.value.vprecio * this.descuento)/100)),2);
-    this.txtPrecioTotalBs =  this.redondear((this.txtPrecioDescuento * this.myForm.value.vcantidad) * this.tc, 2);
-    let id = Date.now();
-    this.txtPrecioTotalSinDesc = this.redondear(this.myForm.value.vprecio * this.myForm.value.vcantidad,2);
-
-    if(this.id != 0){
-      //TODO:EDITAR
-      this.pedidos = new Pedidos(
-        this.id,
-        this.txtPagina,
-        this.myForm.value.vmarca,
-        this.myForm.value.vcodigo,
-        this.myForm.value.vitem,
-        this.myForm.value.vcantidad,
-        this.myForm.value.vprecio,
-        this.txtPrecioDescuento,
-        this.txtPrecioTotalBs,
-        this.myForm.value.vnombre,
-        this.myForm.value.vobservacion,
-        this.id,
-        this.myForm.value.vcampania,
-        this.txtPrecioTotalSinDesc);
-      this.fbService.editOrden(this.pedidos)
-        .then(data => {
-          this.mostrarAlert('Info', 'La orden se ha editado correctamente.')
-          this.navCtrl.pop();
-        })
-        .catch(error => {
-          this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
-          this.navCtrl.pop();
-        });
-    }else {
-      this.pedidos = new Pedidos(
-        Date.now(),
-        this.txtPagina,
-        this.myForm.value.vmarca,
-        this.myForm.value.vcodigo,
-        this.myForm.value.vitem,
-        this.myForm.value.vcantidad,
-        this.myForm.value.vprecio,
-        this.txtPrecioDescuento,
-        this.txtPrecioTotalBs,
-        this.myForm.value.vnombre,
-        this.myForm.value.vobservacion,
-        id + '',
-        this.myForm.value.vcampania,
-        this.txtPrecioTotalSinDesc);
-      this.fbService.crearOrden(this.pedidos)
-        .then(data => {
-          this.mostrarAlert('Info', 'La orden se ha registrado correctamente.');
-          this.navCtrl.pop();
-        })
-        .catch(error => {
-          this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
-          this.navCtrl.pop();
-        });
+    if(!this.eliminar) {
+      this.txtPrecioDescuento = this.redondear((this.myForm.value.vprecio - ((this.myForm.value.vprecio * this.descuento) / 100)), 2);
+      this.txtPrecioTotalBs = this.redondear((this.txtPrecioDescuento * this.myForm.value.vcantidad) * this.tc, 2);
+      let id = Date.now();
+      this.txtPrecioTotalSinDesc = this.redondear(this.myForm.value.vprecio * this.myForm.value.vcantidad, 2);
+      const fechaActual = moment(id).format("YYYY/MM/DD");
+      if (this.id != 0) {
+        //TODO:EDITAR
+        this.pedidos = new Pedidos(
+          this.id,
+          this.txtPagina,
+          this.myForm.value.vmarca,
+          this.myForm.value.vcodigo,
+          this.myForm.value.vitem,
+          this.myForm.value.vcantidad,
+          this.myForm.value.vprecio,
+          this.txtPrecioDescuento,
+          this.txtPrecioTotalBs,
+          this.myForm.value.vnombre,
+          this.myForm.value.vobservacion,
+          fechaActual,
+          this.myForm.value.vcampania,
+          this.txtPrecioTotalSinDesc);
+        this.fbService.editOrden(this.pedidos)
+          .then(data => {
+            this.mostrarAlert('Info', 'La orden se ha editado correctamente.')
+            this.navCtrl.pop();
+          })
+          .catch(error => {
+            this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
+            this.navCtrl.pop();
+          });
+      } else {
+        this.pedidos = new Pedidos(
+          Date.now(),
+          this.txtPagina,
+          this.myForm.value.vmarca,
+          this.myForm.value.vcodigo,
+          this.myForm.value.vitem,
+          this.myForm.value.vcantidad,
+          this.myForm.value.vprecio,
+          this.txtPrecioDescuento,
+          this.txtPrecioTotalBs,
+          this.myForm.value.vnombre,
+          this.myForm.value.vobservacion,
+          fechaActual,
+          this.myForm.value.vcampania,
+          this.txtPrecioTotalSinDesc);
+        this.fbService.crearOrden(this.pedidos)
+          .then(data => {
+            this.mostrarAlert('Info', 'La orden se ha registrado correctamente.');
+            this.navCtrl.pop();
+          })
+          .catch(error => {
+            this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
+            this.navCtrl.pop();
+          });
+      }
     }
   }
 

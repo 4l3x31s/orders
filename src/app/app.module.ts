@@ -14,6 +14,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireDatabaseModule, AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import {PedidoPage} from "../pages/pedido/pedido";
+import { ExcelProvider } from '../providers/excel/excel';
+import {TupperPedidoPage} from "../pages/tupper-pedido/tupper-pedido";
 
 export const firebaseConfig = {
   apiKey: "AIzaSyC1WMsEDhh1UFjxRHDUiOMN8NW7FbfViks",
@@ -29,7 +31,8 @@ export const firebaseConfig = {
     MyApp,
     HomePage,
     ListPage,
-    PedidoPage
+    PedidoPage,
+    TupperPedidoPage
   ],
   imports: [
     BrowserModule,
@@ -43,14 +46,16 @@ export const firebaseConfig = {
     MyApp,
     HomePage,
     ListPage,
-    PedidoPage
+    PedidoPage,
+    TupperPedidoPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FirebaseProvider,
-    AngularFireDatabase
+    AngularFireDatabase,
+    ExcelProvider
   ]
 })
 export class AppModule {}

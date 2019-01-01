@@ -6,14 +6,26 @@
     <ion-title>Lista de Pedidos</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="actualizarPedidos()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="actualizarPedidos()">
         <ion-icon name="refresh"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
+  <ion-toolbar no-border-top>
+    <ion-searchbar placeholder="Filter Items" (ionInput)="filterItems($event)"></ion-searchbar>
+  </ion-toolbar>
+
 </ion-header>
 
 <ion-content>
-
+<!--
+  <ion-item>
+    <ion-label>Date</ion-label>
+    <ion-datetime (ngModelChange)="filterItems2($event)" displayFormat="YYYY/MM" pickerFormat="MMMM YYYY" [(ngModel)]="txtFiltroFecha"></ion-datetime>
+  </ion-item>
+-->
   <ion-grid>
     <ion-row align-items-center class="cabecera-tabla">
       <ion-col >N°</ion-col>
@@ -56,5 +68,8 @@
 
   <ion-fab right bottom>
     <button ion-fab color="moradoClaro" (click)="irNuevoPedido()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+  <ion-fab left bottom>
+    <button ion-fab color="moradoClaro" (click)="filtrarByMes()"><ion-icon name="add"></ion-icon></button>
   </ion-fab>
 </ion-content>
