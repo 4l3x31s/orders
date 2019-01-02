@@ -16,6 +16,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import {PedidoPage} from "../pages/pedido/pedido";
 import { ExcelProvider } from '../providers/excel/excel';
 import {TupperPedidoPage} from "../pages/tupper-pedido/tupper-pedido";
+import {File} from '@ionic-native/file';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyC1WMsEDhh1UFjxRHDUiOMN8NW7FbfViks",
@@ -55,7 +56,8 @@ export const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FirebaseProvider,
     AngularFireDatabase,
-    ExcelProvider
+    ExcelProvider,
+    File
   ]
 })
 export class AppModule {}

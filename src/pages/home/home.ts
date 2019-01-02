@@ -6,7 +6,9 @@ import {PedidoPage} from "../pedido/pedido";
 import {FirebaseProvider} from "../../providers/firebase/firebase";
 import {LisPedidos} from "../class/lisPedidos";
 import {ExcelProvider} from "../../providers/excel/excel";
+import {File} from '@ionic-native/file';
 import * as moment from 'moment';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'page-home',
@@ -28,7 +30,8 @@ export class HomePage {
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public fbService: FirebaseProvider,
-    public excelService: ExcelProvider) {
+    public excelService: ExcelProvider,
+    public file: File) {
     let fecha = moment(Date.now()).format("DD-MM-YYYY");
     console.log(fecha);
   }
@@ -135,4 +138,54 @@ export class HomePage {
     var multiplier = Math.pow(10,decimals ||0);
     return Math.round(value * multiplier) / multiplier;
   }
+
+  getStoragePath()
+  {
+    let file = this.file;
+    return this.file.resolveDirectoryUrl(this.file.externalRootDirectory).then(function (directoryEntry) {
+      return file.getDirectory(directoryEntry, "export", {
+        create: true,
+        exclusive: false
+      }).then(function () {
+        return directoryEntry.nativeURL + "export/";
+      });
+    });
+  }
+
+  OnExport = function ()
+  {
+    let sheet = XLSX.utils.json_to_sheet(this.lstPedidos);
+    let wb = {
+      SheetNames: ["export"],
+      Sheets: {
+        "export": sheet
+      }
+    };
+
+    let wbout = XLSX.write(wb, {
+      bookType: 'xlsx',
+      bookSST: false,
+      type: 'binary'
+    });
+
+    function s2ab(s) {
+      let buf = new ArrayBuffer(s.length);
+      let view = new Uint8Array(buf);
+      for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+      return buf;
+    }
+
+    let blob = new Blob([s2ab(wbout)], {type: 'application/octet-stream'});
+    let self = this;
+    this.getStoragePath().then(function (url) {
+      self.file.writeFile(url, "export_"+new  Date().getTime()+".xlsx", blob, true).then(() => {
+        this.mostrarAlert('Info','El archivo se ha creado en: ' + url);
+
+      }).catch(() => {
+        this.mostrarAlert('Error','Error al crear archivo: ' + url);
+      });
+    });
+  }
+
+
 }

@@ -13,6 +13,112 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+  <form [formGroup]="myForm" (ngSubmit)="registrarPedidos()" novalidate>
+    <ion-list>
+      <ion-item>
+        <ion-label stacked>Numero Página</ion-label>
+        <ion-input type="number" [(ngModel)]="txtPagina" [ngModelOptions]="{standalone: true}" ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Marca</ion-label>
+        <ion-select formControlName="vmarca" [(ngModel)]="txtMarca">
+          <ion-option *ngFor="let marca of marcas" value="{{marca.desc_marca}}" >{{marca.desc_marca}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="myForm.get('vmarca').errors && myForm.get('vmarca').dirty">
+        <p color="danger" ion-text *ngIf="myForm.get('vmarca').hasError('required')">El campo es requerido</p>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Codigo</ion-label>
+        <ion-input type="text" formControlName="vcodigo" name="vcodigo" [(ngModel)]="txtCodigo" ></ion-input>
+      </ion-item>
+      <ion-item *ngIf="myForm.get('vcodigo').errors && myForm.get('vcodigo').dirty">
+        <p color="danger" ion-text *ngIf="myForm.get('vcodigo').hasError('required')">El campo es requerido</p>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Item</ion-label>
+        <ion-input type="text" name="vitem" formControlName="vitem" [(ngModel)]="txtItem"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="myForm.get('vitem').errors && myForm.get('vitem').dirty">
+        <p color="danger" ion-text *ngIf="myForm.get('vitem').hasError('required')">El campo es requerido</p>
+      </ion-item>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label stacked>Cantidad</ion-label>
+              <ion-input type="number" name="vcantidad" formControlName="vcantidad" [(ngModel)]="txtCantidad"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="myForm.get('vcantidad').errors && myForm.get('vcantidad').dirty">
+              <p color="danger" ion-text *ngIf="myForm.get('vcantidad').hasError('required')">El campo es requerido</p>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label stacked>Tipo Cambio</ion-label>
+              <ion-input type="number" [(ngModel)]="tc" [ngModelOptions]="{standalone: true}"></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label stacked>Precio</ion-label>
+              <ion-input type="number" [(ngModel)]="txtPrecio" name="vprecio" formControlName="vprecio"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="myForm.get('vprecio').errors && myForm.get('vprecio').dirty">
+              <p color="danger" ion-text *ngIf="myForm.get('vprecio').hasError('required')">El campo es requerido</p>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label stacked>% Descuento</ion-label>
+              <ion-input type="number" [(ngModel)]="descuento" [ngModelOptions]="{standalone: true}" ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item>
+        <ion-label stacked>Precio con Descuento</ion-label>
+        <ion-label >{{txtPrecio - ((txtPrecio * descuento)/100)  | number: '.0-2'}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Precio Total Bs.</ion-label>
+        <ion-label>{{(((txtPrecio - ((txtPrecio * descuento)/100))* myForm.get('vcantidad').value) * tc) | number: '.0-2'}}</ion-label>
+
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Nombre</ion-label>
+        <ion-input type="text" name="vnombre" formControlName="vnombre" [(ngModel)]="txtNombre"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="myForm.get('vnombre').errors && myForm.get('vnombre').dirty">
+        <p color="danger" ion-text *ngIf="myForm.get('vnombre').hasError('required')">El campo es requerido</p>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Observacion</ion-label>
+        <ion-input type="text" name="vobservacion" formControlName="vobservacion" [(ngModel)]="txtObservacion"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="myForm.get('vobservacion').errors && myForm.get('vobservacion').dirty">
+        <p color="danger" ion-text *ngIf="myForm.get('vobservacion').hasError('required')">El campo es requerido</p>
+      </ion-item>
+      <ion-item>
+        <ion-label stacked>Campaña</ion-label>
+        <ion-input type="text"  name="vcampania" formControlName="vcampania" [(ngModel)]="txtCampania"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="myForm.get('vcampania').errors && myForm.get('vcampania').dirty">
+        <p color="danger" ion-text *ngIf="myForm.get('vcampania').hasError('required')">El campo es requerido</p>
+      </ion-item>
+    </ion-list>
+    <div padding>
+      <button ion-button block color="moradoClaro" type="submit" [disabled]="myForm.invalid">Registar Pedido</button>
+
+    </div>
+  </form>
+  <div padding>
+    <button *ngIf="id != 0" ion-button block color="danger" (click)="eliminarPedido()">Eliminar Nota</button>
+  </div>
 
 </ion-content>
