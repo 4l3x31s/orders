@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AlertController, NavController} from 'ionic-angular';
+import {AlertController, Loading, LoadingController, NavController} from 'ionic-angular';
 import {Parametros} from "../class/parametros";
 import {Pedidos} from "../class/pedidos";
 import {PedidoPage} from "../pedido/pedido";
@@ -25,28 +25,46 @@ export class HomePage {
   public txtTotalCDesc: number = 0 ;
   public txtTotalCdescBs: number = 0;
   public txtFiltroFecha: string = '';
+  public loader:Loading;
 
   constructor(
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public fbService: FirebaseProvider,
     public excelService: ExcelProvider,
-    public file: File) {
-    let fecha = moment(Date.now()).format("DD-MM-YYYY");
-    console.log(fecha);
-  }
-  ionViewDidLoad(){
+    public file: File,
+    public loadingCtrl: LoadingController) {
+
     this.obtenerListaPedidos();
   }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad PedidoPage');
+  }
+  presentLoading() {
+    this.loader = this.loadingCtrl.create({
+      content: "Please wait..."
+    });
+    this.loader.present();
+  }
+  dismissLoading(){
+    if(this.loader){
+      this.loader.dismissAll();
+      this.loader = null;
+    }
+  }
+
   actualizarPedidos(){
     this.obtenerListaPedidos();
   }
-  obtenerListaPedidos(){
+  public obtenerListaPedidos(){
+    this.presentLoading();
     this.txtTotalPedido = 0;
     this.txtTotalCDesc = 0;
     this.txtTotalCdescBs = 0;
     this.fbService.getOrdenes()
       .subscribe(data =>{
+        this.dismissLoading();
 
         this.lstPedidos = Object.assign(data);
         this.lstCopiaPedidos = this.lstPedidos;
@@ -58,6 +76,7 @@ export class HomePage {
           this.txtTotalCdescBs = this.redondear(parseFloat(this.txtTotalCdescBs + '') + parseFloat(this.lstPedidos[i].totalDescuentoBs+ ''),2);
         }
       },error => {
+        this.dismissLoading();
         this.mostrarAlert('Error', 'No se pudo obtener los datos.')
       })
   }

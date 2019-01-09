@@ -12,7 +12,8 @@ export class PedidoTupper {
     public pVendido: number,
     public ganancia: number,
     public nombre: string,
-    public observacion: string
+    public observacion: string,
+    public campania: string
   ){
 
   }
