@@ -17,6 +17,7 @@ import {PedidoPage} from "../pages/pedido/pedido";
 import { ExcelProvider } from '../providers/excel/excel';
 import {TupperPedidoPage} from "../pages/tupper-pedido/tupper-pedido";
 import {File} from '@ionic-native/file';
+import { TupperProvider } from '../providers/tupper/tupper';
 
 export const firebaseConfig = {
   apiKey: "AIzaSyC1WMsEDhh1UFjxRHDUiOMN8NW7FbfViks",
@@ -57,7 +58,8 @@ export const firebaseConfig = {
     FirebaseProvider,
     AngularFireDatabase,
     ExcelProvider,
-    File
+    File,
+    TupperProvider
   ]
 })
 export class AppModule {}

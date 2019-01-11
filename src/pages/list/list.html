@@ -4,9 +4,65 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Tupperware</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="actualizarPedidos()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="actualizarPedidos()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
+  <ion-toolbar no-border-top>
+    <ion-searchbar placeholder="Filter Items" (ionInput)="filterItems($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  
+  <ion-grid>
+    <ion-row align-items-center class="cabecera-tabla">
+      <ion-col >N°</ion-col>
+      <ion-col >Código</ion-col>
+      <ion-col col-2 col-sm>Item</ion-col>
+      <ion-col >Cantidad</ion-col>
+      <ion-col >Precio</ion-col>
+      <ion-col >Desc BS</ion-col>
+      <ion-col col-2 col-sm>Nombre</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let pedido of lstPedidos" align-items-start class="cuerpo-tabla" >
+      <ion-col (click)="filterByCampania(pedido)" >{{pedido.campania}}</ion-col>
+      <ion-col (click)="filterByCampania(pedido)" >{{pedido.codigo}}</ion-col>
+      <ion-col col-2 col-sm>{{pedido.item}}</ion-col>
+      <ion-col (click)="irModificarPedido(pedido)">{{pedido.cantidad}}</ion-col>
+      <ion-col (click)="irModificarPedido(pedido)">{{pedido.precio}}</ion-col>
+      <ion-col (click)="irModificarPedido(pedido)">{{pedido.pTotalConsBs}}</ion-col>
+      <ion-col col-2 col-sm (click)="irModificarPedido(pedido)">{{pedido.nombre}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="cuerpo-tabla-footer">
+        Total $us.
+      </ion-col>
+      <ion-col class="cuerpo-tabla" col-9>{{txtTotalPedido}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="cuerpo-tabla-footer">
+        Total Desc $.
+      </ion-col>
+      <ion-col class="cuerpo-tabla" col-9>{{txtTotalCDesc}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="cuerpo-tabla-footer">
+        Total Desc Bs.
+      </ion-col>
+      <ion-col class="cuerpo-tabla" col-9>{{txtTotalCdescBs}}</ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-fab right bottom>
+    <button ion-fab color="moradoClaro" (click)="irNuevoPedido()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+  <ion-fab left bottom>
+    <button ion-fab color="moradoClaro" (click)="OnExport()"><ion-icon name="document"></ion-icon></button>
+  </ion-fab>
 </ion-content>

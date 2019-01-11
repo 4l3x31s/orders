@@ -1,5 +1,6 @@
 export class PedidoTupper {
   constructor(
+    public id: number,
     public pagina: number,
     public codigo: number,
     public item: string,
@@ -13,7 +14,8 @@ export class PedidoTupper {
     public ganancia: number,
     public nombre: string,
     public observacion: string,
-    public campania: string
+    public campania: string,
+    public fecha:string
   ){
 
   }

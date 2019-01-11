@@ -64,6 +64,7 @@ export class PedidoPage implements OnInit {
 
 
   iniciar(){
+
     this.id = this.navParams.get('id');
     this.campania = this.navParams.get('campania');
     this.myForm = this.fb.group({
@@ -78,8 +79,10 @@ export class PedidoPage implements OnInit {
     })
     if(this.id != 0){
       //TODO:EDITAR
+      this.presentLoading();
       this.fbService.getOrden(this.id, this.campania)
         .subscribe(data => {
+          this.dismissLoading();
           if(data!=null) {
             this.pedidos = Object.assign(data);
             console.log(this.pedidos)
@@ -94,6 +97,7 @@ export class PedidoPage implements OnInit {
             this.txtCampania = this.pedidos.campania;
           }
         }, error => {
+          this.dismissLoading();
           this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error))
         })
     }
@@ -105,9 +109,11 @@ export class PedidoPage implements OnInit {
     this.obtenerMarcas();
   }
   public eliminarPedido(){
+    this.presentLoading();
     this.eliminar = true;
     if(this.id != 0){
       this.fbService.deleteNote(this.pedidos);
+      this.dismissLoading();
       this.mostrarAlert('Info', 'La orden se ha eliminado correctamente.')
       this.navCtrl.pop();
 
@@ -117,6 +123,7 @@ export class PedidoPage implements OnInit {
 
   }
   registrarPedidos(){
+    this.presentLoading();
     if(!this.eliminar) {
       this.txtPrecioDescuento = this.redondear((this.myForm.value.vprecio - ((this.myForm.value.vprecio * this.descuento) / 100)), 2);
       this.txtPrecioTotalBs = this.redondear((this.txtPrecioDescuento * this.myForm.value.vcantidad) * this.tc, 2);
@@ -142,10 +149,12 @@ export class PedidoPage implements OnInit {
           this.txtPrecioTotalSinDesc);
         this.fbService.editOrden(this.pedidos)
           .then(data => {
+            this.dismissLoading();
             this.mostrarAlert('Info', 'La orden se ha editado correctamente.')
             this.navCtrl.pop();
           })
           .catch(error => {
+            this.dismissLoading();
             this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
             this.navCtrl.pop();
           });
@@ -167,10 +176,12 @@ export class PedidoPage implements OnInit {
           this.txtPrecioTotalSinDesc);
         this.fbService.crearOrden(this.pedidos)
           .then(data => {
+            this.dismissLoading();
             this.mostrarAlert('Info', 'La orden se ha registrado correctamente.');
             this.navCtrl.pop();
           })
           .catch(error => {
+            this.dismissLoading();
             this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error));
             this.navCtrl.pop();
           });
@@ -193,10 +204,15 @@ export class PedidoPage implements OnInit {
 
   presentLoading() {
     this.loader = this.loadingCtrl.create({
-      content: "Please wait...",
-      duration: 3000
+      content: "Obteniendo los datos..."
     });
     this.loader.present();
+  }
+  dismissLoading(){
+    if(this.loader){
+      this.loader.dismissAll();
+      this.loader = null;
+    }
   }
 
   mostrarAlert(titulo: string, mensaje: string){
