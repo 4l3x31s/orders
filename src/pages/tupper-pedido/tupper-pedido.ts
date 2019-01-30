@@ -43,6 +43,7 @@ export class TupperPedidoPage implements OnInit {
   public txtNombre: string = '';
   public txtObservacion: string = '';
   public txtCampania: string = '';
+  public txtMarca: string;
 
   public loader: Loading;
 
@@ -76,7 +77,30 @@ export class TupperPedidoPage implements OnInit {
       vganancia: ['', [Validators.required]]
     })
     if(this.id != 0){
-
+      //TODO:EDITAR
+      this.presentLoading();
+      this.fbService.getOrden(this.id, this.campania)
+        .subscribe(data => {
+          this.dismissLoading();
+          if(data!=null) {
+            this.pedidosTupper = Object.assign(data);
+            console.log(this.pedidosTupper)
+            this.txtPagina = this.pedidosTupper.pagina;
+            this.txtMarca = 'TUPPERWARE';
+            this.txtCodigo = this.pedidosTupper.codigo;
+            this.txtItem = this.pedidosTupper.item;
+            this.txtCantidad = this.pedidosTupper.cantidad;
+            this.txtPrecio = this.pedidosTupper.precio;
+            this.txtVendido = this.pedidosTupper.pVendido;
+            this.txtGanancia = this.pedidosTupper.ganancia;
+            this.txtNombre = this.pedidosTupper.nombre;
+            this.txtObservacion = this.pedidosTupper.observacion;
+            this.txtCampania = this.pedidosTupper.campania;
+          }
+        }, error => {
+          this.dismissLoading();
+          this.mostrarAlert('Error', 'Error: ' + JSON.stringify(error))
+        })
     }
   }
   obtenerMarcas(){
